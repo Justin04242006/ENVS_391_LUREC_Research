@@ -5,7 +5,7 @@ date: "2026-04-30"
 output: html_document
 ---
 
-# Initial summary of previous work: 4/30/2026
+# This repository covers work done during the Spring 2026 semester (January-April 2026). 
 
 ## Introduction 
 
