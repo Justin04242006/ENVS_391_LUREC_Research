@@ -14,9 +14,15 @@ This project expands upon the work of a former undergraduate student, who instal
 
 ## Project background information
 
-During the 2024-25 academic year, a former undergraduate student majoring in Biology used funding from the School of Environmental Sustainability and the Provost Fellowship to install twelve cylindrical pots filled with soil, and then install mositure content sensors inside each pot. Two data loggers were installed, and six sensors were connected to each data logger. The sensors record hourly volumetric soil water content readings and send them to the attached logger, from which the readings can be downloaded. The student's original intention for the research was to compare water infliltration between native and invasive vegetation. Native bluestem grass was planted in some of the pots but quickly died. 
+During the 2024-25 academic year, a former undergraduate student majoring in Biology used funding from the School of Environmental Sustainability and the Provost Fellowship to install twelve cylindrical pots filled with soil, and then install mositure content sensors inside each pot. 
+Two data loggers were installed, and six sensors were connected to each data logger. 
+The sensors record hourly volumetric soil water content readings and send them to the attached logger, from which the readings can be downloaded. 
+The student's original intention for the research was to compare water infliltration between native and invasive vegetation. 
+Native bluestem grass was planted in some of the pots but quickly died. 
 
-This setback led my professor to reimagine the project into a comparison of water infiltration rates between different soil cover materials found on Loyola's Lakeshore Campus. Meanwhile, I stumbled upon online mentions of the project while I was a sophomore eager to gain experience in environmental data analysis. When I met the professor and learned that I would have the opportunity to examine real data from the existing site and contribute to further research while earning course credit, I jumped at the opportunity. 
+This setback led my professor to reimagine the project into a comparison of water infiltration rates between different soil cover materials found on Loyola's Lakeshore Campus. 
+Meanwhile, I stumbled upon online mentions of the project while I was a sophomore eager to gain experience in environmental data analysis. 
+When I met the professor and learned that I would have the opportunity to examine real data from the existing site and contribute to further research while earning course credit, I accepted the opportunity. 
 
 ## Contents of my work so far
 
