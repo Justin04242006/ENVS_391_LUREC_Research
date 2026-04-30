@@ -9,7 +9,8 @@ output: html_document
 
 ## Introduction 
 
-Welcome to the repository hosting code for the project of my Independent Environmental Research class! This project expanded upon the work of a former undergraduate student, who installed a field site on the Loyola University Retreat and Ecology Campus in Woodstock, IL in collaboration with the Environmental Science professor who was my professor for the research class. 
+Welcome to the repository hosting code for the project of my Independent Environmental Research class! 
+This project expands upon the work of a former undergraduate student, who installed a field site on the Loyola University Retreat and Ecology Campus in Woodstock, IL in collaboration with the Environmental Science professor who was my professor for the research class. 
 
 ## Project background information
 
@@ -19,14 +20,26 @@ This setback led my professor to reimagine the project into a comparison of wate
 
 ## Contents of my work so far
 
-No further field research has been done yet, as it requires funding which the professor and I only recently obtained via a fellowship proposal application. The work visible in the LUREC_project_code file within this repository consists of formatting data downloaded by my professor from the field site, examining summary statistics and missingness, plotting time series of the data against temperature and precipitation from nearby weather stations, and modeling the relationships between these variables using multiple linear regression.
+No further field research has been done yet, as it requires funding which the professor and I only recently obtained via a fellowship proposal application. 
+The work visible in the LUREC_project_code file within this repository represents an early phase of the project between the installation of the field site and the acquistion of necessary funding.
+The work consists of formatting data downloaded by my professor from the field site, examining summary statistics and missingness, plotting time series of the data against temperature and precipitation from nearby weather stations, and modeling the relationships between these variables using multiple linear regression.
 
 ## Project significance and future goals
 
-With funding obtained from the Baum Foundation through the School of Environmental Studies Fellowship, the professor and I intend to install several different cover materials on top of the pots of soil at the LUREC site this summer. Three of the pots will be covered with cement, three with permeable tile, three with native vegetation (possibly Bluestem), and three will be left uncovered. The work that has been done so far gathered insight into water infiltration for this project's control group (the uncovered pots). However, these analyses relied on proxy data from other locations within a few miles of the site, so some of the funding will be used to purchase on-site temperature sensors and precipitation gauges to improve the accuracy of current models by eliminating spatial variability.
+With funding obtained from the Baum Foundation through the School of Environmental Studies Fellowship, the professor and I intend to install several different cover materials on top of the pots of soil at the LUREC site this summer. 
+Three of the pots will be covered with cement, three with permeable tile, three with native vegetation (possibly Bluestem), and three will be left uncovered. 
+The work that has been done so far gathered insight into water infiltration for this project's control group (the uncovered pots). 
+However, these analyses relied on proxy data from other locations within a few miles of the site, so some of the funding will be used to purchase on-site temperature sensors and precipitation gauges to improve the accuracy of current models by eliminating spatial variability.
 
-The choice of cover materials for the pots was very intentional. Each cover material is intended to simulate water infiltration through a different type of surface found on Loyola's Lakeshore Campus. The native vegetation represents grassy areas such as our two Quads, green roofs, and native prairie gardens. The cement represents the concrete roads and highways cutting through campus; namely, Sheridan Road and Winthrop Avenue. The permeable tile represents eixsting permeable pavement on many campus walkways, which consists of a crushed gravel-like material formed into brick-like shapes with gaps between them to allow for stormwater absorption. 
+The choice of cover materials for the pots was very intentional. 
+Each cover material is intended to simulate water infiltration through a different type of surface found on Loyola's Lakeshore Campus. 
+The native vegetation represents grassy areas such as our two Quads, green roofs, and native prairie gardens. 
+The cement represents the concrete roads and highways cutting through campus; namely, Sheridan Road and Winthrop Avenue. 
+The permeable tile represents eixsting permeable pavement on many campus walkways, which consists of a crushed gravel-like material formed into brick-like shapes with gaps between them to allow for stormwater absorption. 
 
-It is important to note that the permeable pavement currently on Loyola's campus is only permeable due to the gaps in the pavement. The material itself is not very permeable. Therefore, analysis of water infiltration through permeable tile on the LUREC campus will allow us evaluate whether the actually permeable tile would absorb more rainwater than Loyola's existing permeable pavers, by  extrapolating the area of a single pot to the approximate combined area of Loyola's campus walkways. The ultimate goal of this multi-year project is to provide recommendations to the university on how current stormwater managment systems can be further improved and made more efficient. 
+It is important to note that the permeable pavement currently on Loyola's campus is only permeable due to the gaps in the pavement. 
+The material itself is not very permeable. 
+Therefore, analysis of water infiltration through permeable tile on the LUREC campus will allow us evaluate whether the actually permeable tile would absorb more rainwater than Loyola's existing permeable pavers, by  extrapolating the area of a single pot to the approximate combined area of Loyola's campus walkways.
+The ultimate goal of this multi-year project is to provide recommendations to the university on how current stormwater managment systems can be further improved and made more efficient. 
 
 
