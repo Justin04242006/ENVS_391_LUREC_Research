@@ -1,3 +1,5 @@
+    library(tidyverse)
+
     ## Warning: package 'ggplot2' was built under R version 4.4.3
 
     ## Warning: package 'tibble' was built under R version 4.4.3
@@ -20,6 +22,8 @@
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
     ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+    library(plotly)
 
     ## Warning: package 'plotly' was built under R version 4.4.3
 
@@ -237,6 +241,7 @@ I then investigated the distribution of each pot’s water content.
     ## Returning the palette you asked for with that many colors
 
 ![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+
 Creating this boxplot made it visually apparent that pots 5 and 8
 contained negative values. Since soil moisture content is measured as a
 proportion of cubic meters of water per cubic meter of soil, negative
