@@ -216,7 +216,29 @@ character to numeric class.
 
     rm(six__more_LUREC_water_sensors_new)
 
+    six_LUREC_water_sensor_data_new<-six_LUREC_water_sensor_data_new%>%
+    tail(7915)
+    Combined_LUREC_water_data<-six_LUREC_water_sensor_data_new%>%
+    left_join(six_more_LUREC_water_sensors_new, by=c("Timestamp"="Timestamp"))
+
 I then investigated the distribution of each pot’s water content.
+
+    Averaged_LUREC_water_data<-Combined_LUREC_water_data%>%
+    mutate(Timestamp=mdy_hm(Timestamp))%>%
+    mutate(Day=format(Timestamp, format= "%d"), Month=format(Timestamp, format="%m"), Year=format(Timestamp, format="%y"))%>%
+    mutate(Date=str_c(Month, "/", Day, "/", Year))%>%
+    mutate(Date=mdy(Date))%>%
+    group_by(Date)%>%
+    summarize(Pot_1_mean_water_content=mean(Pot_1_Water_Content_proportion), Pot_2_mean_water_content=mean(Pot_2_Water_Content_proportion), Pot_3_mean_water_content=mean(Pot_3_Water_Content_proportion), Pot_4_mean_water_content=mean(Pot_4_Water_Content_proportion), Pot_5_mean_water_content=mean(Pot_5_Water_Content_proportion), Pot_6_mean_water_content=mean(Pot_6_Water_Content_proportion), Pot_7_mean_water_content=mean(Pot_7_Water_Content_proportion), Pot_8_mean_water_content=mean(Pot_8_Water_Content_proportion), Pot_9_mean_water_content=mean(Pot_9_Water_Content_proportion), Pot_10_mean_water_content=mean(Pot_10_Water_Content_proportion), Pot_11_mean_water_content=mean(Pot_11_Water_Content_proportion), Pot_12_mean_water_content=mean(Pot_12_Water_Content_proportion))    
+
+    Water_content_precipitation_combined<-Averaged_LUREC_water_data%>%
+    left_join(Woodstock_combined_weather_data, by=c("Date"="Date"))%>%
+    mutate(Avg_MWC=(Pot_1_mean_water_content+Pot_2_mean_water_content+Pot_3_mean_water_content+Pot_4_mean_water_content+Pot_5_mean_water_content+Pot_6_mean_water_content+Pot_7_mean_water_content+Pot_8_mean_water_content+Pot_9_mean_water_content+Pot_10_mean_water_content+Pot_11_mean_water_content+Pot_12_mean_water_content)/12)%>%
+    select(-17)
+
+    colnames(Water_content_precipitation_combined)=c("Date", "Pot_1_MWC", "Pot_2_MWC", "Pot_3_MWC", "Pot_4_MWC", "Pot_5_MWC", "Pot_6_MWC", "Pot_7_MWC", "Pot_8_MWC", "Pot_9_MWC", "Pot_10_MWC", "Pot_11_MWC", "Pot_12_MWC","PRCP_x", "PRCP_y", "PRCP_z")
+    Water_content_precipitation_combined<-Water_content_precipitation_combined%>%
+    mutate(Avg_precip=(PRCP_x+PRCP_y+PRCP_z)/3)
 
     Combined_LUREC_water_data<-six_LUREC_water_sensor_data_new%>%
     tail(7915)%>%
@@ -290,3 +312,63 @@ the Crystal Lake 4 NW weather station (the only weather station near the
 field site with both temperature and precipitation data for 2025). Data
 for this weather station was downloaded from the same website as the
 three Woodstock stations.
+
+    library(tidyverse)
+    Crystal_Lake_temperature_data<-read_csv("~/Desktop/Ghatak_research_project/Crystal_Lake_Temperature_data.csv")
+
+    ## Warning: One or more parsing issues, call `problems()` on your data frame for details,
+    ## e.g.:
+    ##   dat <- vroom(...)
+    ##   problems(dat)
+
+    ## Rows: 12584 Columns: 7
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (1): Column1
+    ## dbl (5): Column3, Column4, Column5, Column6, Column7
+    ## lgl (1): Column2
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+    colnames(Crystal_Lake_temperature_data)<-c("Date", "Average_Temp_F", "Max_Temp_F", "Min_Temp_F", "PRCP_inches", "Snow_inches", "SNWD_inches")
+    Crystal_Lake_temperature_data<-Crystal_Lake_temperature_data%>%
+    tail(12582)%>%
+    mutate(Date=ymd(Date))%>%
+    mutate(Year=year(Date), Month=month(Date), Day=day(Date))%>%
+    filter(Year==2025)%>%
+    tail(417)%>%
+    left_join(Averaged_LUREC_water_data, by=c("Date"="Date"))%>%
+    filter(Date<"2025-10-07" & Date>"2025-02-03")%>%
+    select(-2)%>%
+    mutate(Avg_Temp_F=(Max_Temp_F+Min_Temp_F)/2)
+
+
+    Combined_LUREC_water_data_new<-Combined_LUREC_water_data_pivoted%>%
+    mutate(Timestamp=mdy_hm(Timestamp))%>%
+    mutate(Day=format(Timestamp, format= "%d"), Month=format(Timestamp, format="%m"), Year=format(Timestamp, format="%y"))%>%
+    mutate(Date=str_c(Month, "/", Day, "/", Year))%>%
+    mutate(Date=mdy(Date))%>%
+    group_by(Date)%>%
+    summarize(Average_water_content=mean(Water_content))
+
+    Crystal_Lake_temperature_data<-Crystal_Lake_temperature_data%>%
+    left_join(Water_content_precipitation_combined, by=c("Date"="Date"))%>%
+    mutate(Avg_precip=(SW_0.7_Precip+SW_3.8_Precip+NW_5_Precip)/3)%>%
+    select(c(1,2,3,38,39))
+
+    colnames(Crystal_Lake_temperature_data)<-c("Date", "Max_Temp_F", "Min_Temp_F", "MWC", "Avg_precip")
+
+    Combined_Precip_water_content_max_temp_plot<-plot_ly(data=Crystal_Lake_temperature_data, x=~Date, y=~MWC, name="Mean Water Content(Left)", type="scatter", mode="lines+markers")%>%
+      add_trace(x=~Date, y=~Avg_precip, yaxis="y2", name="Average Precip in Inches(Right)", type="bar")%>%  
+      add_trace(x=~Date, y=~Max_Temp_F, yaxis="y3",  name="Crystal Lake 4 NW Max temp (Middle)", type="scatter", mode="lines+markers")%>%
+      layout(title="Time Series of Mean Water Content, Maximum temperature and precipitation, averaged by day", xaxis=list(title="Date"), yaxis=list(title="Mean Water Content", side="left"), yaxis2=list(title="Crystal Lake precipitation", overlaying="y", side="right"), yaxis3=list(title="Maximum temperature", overlaying="y", position=0.5))
+    Combined_Precip_water_content_max_temp_plot
+
+    ## Warning: Ignoring 41 observations
+
+    ## Warning: 'bar' objects don't have these attributes: 'mode'
+    ## Valid attributes include:
+    ## '_deprecated', 'alignmentgroup', 'base', 'basesrc', 'cliponaxis', 'constraintext', 'customdata', 'customdatasrc', 'dx', 'dy', 'error_x', 'error_y', 'hoverinfo', 'hoverinfosrc', 'hoverlabel', 'hovertemplate', 'hovertemplatesrc', 'hovertext', 'hovertextsrc', 'ids', 'idssrc', 'insidetextanchor', 'insidetextfont', 'legend', 'legendgroup', 'legendgrouptitle', 'legendrank', 'legendwidth', 'marker', 'meta', 'metasrc', 'name', 'offset', 'offsetgroup', 'offsetsrc', 'opacity', 'orientation', 'outsidetextfont', 'selected', 'selectedpoints', 'showlegend', 'stream', 'text', 'textangle', 'textfont', 'textposition', 'textpositionsrc', 'textsrc', 'texttemplate', 'texttemplatesrc', 'transforms', 'type', 'uid', 'uirevision', 'unselected', 'visible', 'width', 'widthsrc', 'x', 'x0', 'xaxis', 'xcalendar', 'xhoverformat', 'xperiod', 'xperiod0', 'xperiodalignment', 'xsrc', 'y', 'y0', 'yaxis', 'ycalendar', 'yhoverformat', 'yperiod', 'yperiod0', 'yperiodalignment', 'ysrc', 'key', 'set', 'frame', 'transforms', '_isNestedKey', '_isSimpleKey', '_isGraticule', '_bbox'
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-9-1.png)
