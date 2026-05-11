@@ -42,6 +42,35 @@
     ## 
     ##     layout
 
+    library(regclass)
+
+    ## Loading required package: bestglm
+    ## Loading required package: leaps
+    ## Loading required package: VGAM
+
+    ## Warning: package 'VGAM' was built under R version 4.4.3
+
+    ## Loading required package: stats4
+    ## Loading required package: splines
+    ## Loading required package: rpart
+    ## Loading required package: randomForest
+    ## randomForest 4.7-1.2
+    ## Type rfNews() to see new features/changes/bug fixes.
+    ## 
+    ## Attaching package: 'randomForest'
+    ## 
+    ## The following object is masked from 'package:dplyr':
+    ## 
+    ##     combine
+    ## 
+    ## The following object is masked from 'package:ggplot2':
+    ## 
+    ##     margin
+    ## 
+    ## Important regclass change from 1.3:
+    ## All functions that had a . in the name now have an _
+    ## all.correlations -> all_correlations, cor.demo -> cor_demo, etc.
+
 The very first action taken, before the project began, was downloading
 nearby precipitation data from this site:
 <https://www.ncei.noaa.gov/access/past-weather/Woodstock%2C%20Illinois.>
@@ -372,3 +401,30 @@ three Woodstock stations.
     ## '_deprecated', 'alignmentgroup', 'base', 'basesrc', 'cliponaxis', 'constraintext', 'customdata', 'customdatasrc', 'dx', 'dy', 'error_x', 'error_y', 'hoverinfo', 'hoverinfosrc', 'hoverlabel', 'hovertemplate', 'hovertemplatesrc', 'hovertext', 'hovertextsrc', 'ids', 'idssrc', 'insidetextanchor', 'insidetextfont', 'legend', 'legendgroup', 'legendgrouptitle', 'legendrank', 'legendwidth', 'marker', 'meta', 'metasrc', 'name', 'offset', 'offsetgroup', 'offsetsrc', 'opacity', 'orientation', 'outsidetextfont', 'selected', 'selectedpoints', 'showlegend', 'stream', 'text', 'textangle', 'textfont', 'textposition', 'textpositionsrc', 'textsrc', 'texttemplate', 'texttemplatesrc', 'transforms', 'type', 'uid', 'uirevision', 'unselected', 'visible', 'width', 'widthsrc', 'x', 'x0', 'xaxis', 'xcalendar', 'xhoverformat', 'xperiod', 'xperiod0', 'xperiodalignment', 'xsrc', 'y', 'y0', 'yaxis', 'ycalendar', 'yhoverformat', 'yperiod', 'yperiod0', 'yperiodalignment', 'ysrc', 'key', 'set', 'frame', 'transforms', '_isNestedKey', '_isSimpleKey', '_isGraticule', '_bbox'
 
 ![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-9-1.png)
+
+This graph suggested very rapid water infiltration, owing to the very
+small time delays ( usually &lt;= 1 day) between precipitation events
+and increases in mean water content. It appears that, at certain points
+in the months of February and March, mean water content increases
+without precipitation, but this is partially due to missingness in the
+precipitation data during those months.
+
+At this point, the relationship between maximum temperature and mean
+water content was uncertain and was investigated as part of the multiple
+linear regression model subsequently generated. The model regressed
+daily change in mean water content against daily maximum temperature
+from the Crystal Lake 4 NW weather station and the average of daily
+precipitation from Crystal Lake 4 NW, Woodstock 5 NW, and Woodstock 3.8
+SW.
+
+    Crystal_Lake_temperature_data<-Crystal_Lake_temperature_data%>%
+    mutate(Avg_temp_F=(Min_Temp_F+Max_Temp_F)/2)%>%
+    mutate(MWC_daily_change=MWC-lag(MWC))
+
+    Precip_plot<-plot_ly(Crystal_Lake_temperature_data, x=~Max_Temp_F, y=~Avg_precip, z=~MWC_daily_change)%>%
+      add_markers()
+    Precip_plot
+
+    ## Warning: Ignoring 108 observations
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-10-1.png)
