@@ -417,6 +417,9 @@ from the Crystal Lake 4 NW weather station and the average of daily
 precipitation from Crystal Lake 4 NW, Woodstock 5 NW, and Woodstock 3.8
 SW.
 
+First, the linearity assumption was assessed using a 3D scatterplot
+since two explanatory variables were involved.
+
     Crystal_Lake_temperature_data<-Crystal_Lake_temperature_data%>%
     mutate(Avg_temp_F=(Min_Temp_F+Max_Temp_F)/2)%>%
     mutate(MWC_daily_change=MWC-lag(MWC))
