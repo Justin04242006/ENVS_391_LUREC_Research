@@ -575,7 +575,7 @@ value and regenerate the model without that observation.
     plot(new_MLR_model, 2)
 
 ![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-14-2.png)
-Removing the single influential observation did not singificantly
+Removing the single influential observation did not significantly
 improve the residual normality. Nevertheless, I will continue testing
 and removing influential observations one at a time until none remain.
 
@@ -691,5 +691,661 @@ the model again.
     ## [1] 4.544929
 
 Observation 76 from the dataset with two influential observations
-removed has the highest abolsute residual value, so I will remove it and
+removed has the highest absolute residual value, so I will remove it and
 regenerate the model for the third time.
+
+    Crystal_Lake_temperature_data_4<-Crystal_Lake_temperature_data_3[-76, ]
+    MLR_model_v4<-lm(MWC_daily_change~Max_Temp_F+Avg_precip, data=Crystal_Lake_temperature_data_4)
+    summary(MLR_model_v4)
+
+    ## 
+    ## Call:
+    ## lm(formula = MWC_daily_change ~ Max_Temp_F + Avg_precip, data = Crystal_Lake_temperature_data_4)
+    ## 
+    ## Residuals:
+    ##        Min         1Q     Median         3Q        Max 
+    ## -0.0178571 -0.0015741 -0.0000858  0.0013511  0.0176051 
+    ## 
+    ## Coefficients:
+    ##               Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) -1.801e-03  1.589e-03  -1.133    0.259    
+    ## Max_Temp_F  -1.437e-05  2.240e-05  -0.641    0.522    
+    ## Avg_precip   1.648e-02  1.388e-03  11.867   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.004761 on 131 degrees of freedom
+    ##   (108 observations deleted due to missingness)
+    ## Multiple R-squared:  0.519,  Adjusted R-squared:  0.5117 
+    ## F-statistic: 70.67 on 2 and 131 DF,  p-value: < 2.2e-16
+
+    plot(MLR_model_v4, 1)
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-17-1.png)
+
+    plot(MLR_model_v4, 2)
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-17-2.png)
+
+    #Observations 10, 193, and 24 appear potentially influential.
+
+    Jackknife_residuals_4<-rstudent(MLR_model_v4)
+
+    Crystal_Lake_temperature_data_4$jackknife_resid <- NA
+    used_rows <- as.numeric(rownames(model.frame(MLR_model_v4)))
+    Crystal_Lake_temperature_data_4$jackknife_resid[used_rows] <- Jackknife_residuals_4
+
+    n4=nrow(Crystal_Lake_temperature_data_4)
+    k4=3
+    p_value_10_new<-2*pt(abs(Crystal_Lake_temperature_data_4$jackknife_resid[10]), df=n4-k4-1, lower.tail=FALSE)
+    p_value_193<-2*pt(abs(Crystal_Lake_temperature_data_4$jackknife_resid[193]), df=n4-k4-1, lower.tail=FALSE)
+    p_value_24_new<-2*pt(abs(Crystal_Lake_temperature_data_4$jackknife_resid[24]), df=n4-k4-1, lower.tail=FALSE)
+
+    p_value_10_new
+
+    ## [1] 6.578074e-05
+
+    p_value_193
+
+    ## [1] 0.0004671086
+
+    p_value_24_new
+
+    ## [1] 0.0001103372
+
+    Crystal_Lake_temperature_data_4$jackknife_resid[10]
+
+    ## [1] -4.063155
+
+    Crystal_Lake_temperature_data_4$jackknife_resid[193]
+
+    ## [1] 3.548229
+
+    Crystal_Lake_temperature_data_4$jackknife_resid[24]
+
+    ## [1] 3.932422
+
+All three observations are significantly influential, with observation
+10 having the highest abolsute residual value. Thus, I will remove the
+10th observation and regenerate the model a 4th time.
+
+    Crystal_Lake_temperature_data_5<-Crystal_Lake_temperature_data_4[-10, ]
+    MLR_model_v5<-lm(MWC_daily_change~Max_Temp_F+Avg_precip, data=Crystal_Lake_temperature_data_5)
+    summary(MLR_model_v5)
+
+    ## 
+    ## Call:
+    ## lm(formula = MWC_daily_change ~ Max_Temp_F + Avg_precip, data = Crystal_Lake_temperature_data_5)
+    ## 
+    ## Residuals:
+    ##        Min         1Q     Median         3Q        Max 
+    ## -0.0146794 -0.0016288 -0.0000676  0.0013465  0.0171142 
+    ## 
+    ## Coefficients:
+    ##               Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) -4.968e-04  1.536e-03  -0.323    0.747    
+    ## Max_Temp_F  -3.169e-05  2.160e-05  -1.467    0.145    
+    ## Avg_precip   1.678e-02  1.315e-03  12.758   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.004502 on 130 degrees of freedom
+    ##   (108 observations deleted due to missingness)
+    ## Multiple R-squared:  0.556,  Adjusted R-squared:  0.5491 
+    ## F-statistic: 81.39 on 2 and 130 DF,  p-value: < 2.2e-16
+
+    plot(MLR_model_v5, 1)
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-18-1.png)
+
+    plot(MLR_model_v5, 2)
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-18-2.png)
+
+    #Observations 10, 192, and 23 appear potentially influential.
+
+    Jackknife_residuals_5<-rstudent(MLR_model_v5)
+
+    Crystal_Lake_temperature_data_5$jackknife_resid <- NA
+    used_rows <- as.numeric(rownames(model.frame(MLR_model_v5)))
+    Crystal_Lake_temperature_data_5$jackknife_resid[used_rows] <- Jackknife_residuals_5
+
+    n5=nrow(Crystal_Lake_temperature_data_5)
+    k5=3
+    p_value_10_new<-2*pt(abs(Crystal_Lake_temperature_data_5$jackknife_resid[10]), df=n5-k5-1, lower.tail=FALSE)
+    p_value_192<-2*pt(abs(Crystal_Lake_temperature_data_5$jackknife_resid[192]), df=n5-k5-1, lower.tail=FALSE)
+    p_value_23<-2*pt(abs(Crystal_Lake_temperature_data_5$jackknife_resid[23]), df=n5-k5-1, lower.tail=FALSE)
+
+    p_value_10_new
+
+    ## [1] 0.0005846235
+
+    p_value_192
+
+    ## [1] 0.0001759293
+
+    p_value_23
+
+    ## [1] 6.669408e-05
+
+    Crystal_Lake_temperature_data_5$jackknife_resid[10]
+
+    ## [1] -3.48574
+
+    Crystal_Lake_temperature_data_5$jackknife_resid[192]
+
+    ## [1] 3.811785
+
+    Crystal_Lake_temperature_data_5$jackknife_resid[24]
+
+    ## [1] 3.400733
+
+All 3 points are statistically influential, with observation 192 having
+the highest absolute residual value. I will regenerate the model a fifth
+time with observation 192 removed.
+
+    Crystal_Lake_temperature_data_6<-Crystal_Lake_temperature_data_5[-192, ]
+    MLR_model_v6<-lm(MWC_daily_change~Max_Temp_F+Avg_precip, data=Crystal_Lake_temperature_data_6)
+    summary(MLR_model_v6)
+
+    ## 
+    ## Call:
+    ## lm(formula = MWC_daily_change ~ Max_Temp_F + Avg_precip, data = Crystal_Lake_temperature_data_6)
+    ## 
+    ## Residuals:
+    ##        Min         1Q     Median         3Q        Max 
+    ## -0.0148075 -0.0014507  0.0000203  0.0015103  0.0171096 
+    ## 
+    ## Coefficients:
+    ##               Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) -2.124e-04  1.464e-03  -0.145   0.8849    
+    ## Max_Temp_F  -3.764e-05  2.062e-05  -1.826   0.0702 .  
+    ## Avg_precip   1.682e-02  1.252e-03  13.441   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.004285 on 129 degrees of freedom
+    ##   (108 observations deleted due to missingness)
+    ## Multiple R-squared:  0.5834, Adjusted R-squared:  0.577 
+    ## F-statistic: 90.34 on 2 and 129 DF,  p-value: < 2.2e-16
+
+    plot(MLR_model_v6, 1)
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-19-1.png)
+
+    plot(MLR_model_v6, 2)
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-19-2.png)
+
+    #Observations 10, 23, and 24 appear potentially influential.
+
+    Jackknife_residuals_6<-rstudent(MLR_model_v6)
+
+    Crystal_Lake_temperature_data_6$jackknife_resid <- NA
+    used_rows <- as.numeric(rownames(model.frame(MLR_model_v6)))
+    Crystal_Lake_temperature_data_6$jackknife_resid[used_rows] <- Jackknife_residuals_6
+
+    n6=nrow(Crystal_Lake_temperature_data_6)
+    k6=3
+    p_value_10_new<-2*pt(abs(Crystal_Lake_temperature_data_6$jackknife_resid[10]), df=n6-k6-1, lower.tail=FALSE)
+    p_value_23<-2*pt(abs(Crystal_Lake_temperature_data_6$jackknife_resid[192]), df=n6-k6-1, lower.tail=FALSE)
+    p_value_24_new<-2*pt(abs(Crystal_Lake_temperature_data_6$jackknife_resid[23]), df=n6-k6-1, lower.tail=FALSE)
+
+    p_value_10_new
+
+    ## [1] 0.0002510531
+
+    p_value_23
+
+    ## [1] 0.7893087
+
+    p_value_24_new
+
+    ## [1] 2.546716e-05
+
+    Crystal_Lake_temperature_data_6$jackknife_resid[10]
+
+    ## [1] -3.71782
+
+    Crystal_Lake_temperature_data_6$jackknife_resid[23]
+
+    ## [1] 4.295642
+
+    Crystal_Lake_temperature_data_6$jackknife_resid[24]
+
+    ## [1] 3.604685
+
+The 23rd observation is not statistically influential at alpha=0.01.
+Observations 10 and 24 are influential, and of these two data,
+observation 10 has the hgiher absolute residual value. Thus, I
+regenerate the model a sixth time, removing observation 10.
+
+    Crystal_Lake_temperature_data_7<-Crystal_Lake_temperature_data_6[-10, ]
+    MLR_model_v7<-lm(MWC_daily_change~Max_Temp_F+Avg_precip, data=Crystal_Lake_temperature_data_7)
+    summary(MLR_model_v7)
+
+    ## 
+    ## Call:
+    ## lm(formula = MWC_daily_change ~ Max_Temp_F + Avg_precip, data = Crystal_Lake_temperature_data_7)
+    ## 
+    ## Residuals:
+    ##       Min        1Q    Median        3Q       Max 
+    ## -0.013150 -0.001464 -0.000169  0.001598  0.016682 
+    ## 
+    ## Coefficients:
+    ##               Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)  9.289e-04  1.430e-03   0.650  0.51705    
+    ## Max_Temp_F  -5.285e-05  2.009e-05  -2.631  0.00955 ** 
+    ## Avg_precip   1.711e-02  1.196e-03  14.302  < 2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.004087 on 128 degrees of freedom
+    ##   (108 observations deleted due to missingness)
+    ## Multiple R-squared:  0.6157, Adjusted R-squared:  0.6097 
+    ## F-statistic: 102.5 on 2 and 128 DF,  p-value: < 2.2e-16
+
+    plot(MLR_model_v7, 1)
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-20-1.png)
+
+    plot(MLR_model_v7, 2)
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-20-2.png)
+
+    #Observations 9, 22, and 23 appear potentially influential.
+
+    Jackknife_residuals_7<-rstudent(MLR_model_v7)
+
+    Crystal_Lake_temperature_data_7$jackknife_resid <- NA
+    used_rows <- as.numeric(rownames(model.frame(MLR_model_v7)))
+    Crystal_Lake_temperature_data_7$jackknife_resid[used_rows] <- Jackknife_residuals_7
+
+    n7=nrow(Crystal_Lake_temperature_data_7)
+    k7=3
+    p_value_9<-2*pt(abs(Crystal_Lake_temperature_data_7$jackknife_resid[9]), df=n7-k7-1, lower.tail=FALSE)
+    p_value_22<-2*pt(abs(Crystal_Lake_temperature_data_7$jackknife_resid[22]), df=n7-k7-1, lower.tail=FALSE)
+    p_value_23<-2*pt(abs(Crystal_Lake_temperature_data_7$jackknife_resid[23]), df=n7-k7-1, lower.tail=FALSE)
+
+    p_value_9
+
+    ## [1] 0.0006997745
+
+    p_value_22
+
+    ## [1] 1.570978e-05
+
+    p_value_23
+
+    ## [1] 0.0002511771
+
+    Crystal_Lake_temperature_data_7$jackknife_resid[9]
+
+    ## [1] -3.435253
+
+    Crystal_Lake_temperature_data_7$jackknife_resid[22]
+
+    ## [1] 4.410451
+
+    Crystal_Lake_temperature_data_7$jackknife_resid[23]
+
+    ## [1] 3.717933
+
+All 3 points are influential, with observation 22 having the highest
+abolsute residual value. I will regenerate the model a seventh time,
+removing observation 22.
+
+    Crystal_Lake_temperature_data_8<-Crystal_Lake_temperature_data_7[-22, ]
+    MLR_model_v8<-lm(MWC_daily_change~Max_Temp_F+Avg_precip, data=Crystal_Lake_temperature_data_8)
+    summary(MLR_model_v8)
+
+    ## 
+    ## Call:
+    ## lm(formula = MWC_daily_change ~ Max_Temp_F + Avg_precip, data = Crystal_Lake_temperature_data_8)
+    ## 
+    ## Residuals:
+    ##        Min         1Q     Median         3Q        Max 
+    ## -0.0126440 -0.0013322  0.0000536  0.0015928  0.0146520 
+    ## 
+    ## Coefficients:
+    ##               Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)  1.726e-04  1.348e-03   0.128   0.8983    
+    ## Max_Temp_F  -4.393e-05  1.889e-05  -2.326   0.0216 *  
+    ## Avg_precip   1.717e-02  1.118e-03  15.356   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.00382 on 127 degrees of freedom
+    ##   (108 observations deleted due to missingness)
+    ## Multiple R-squared:   0.65,  Adjusted R-squared:  0.6445 
+    ## F-statistic: 117.9 on 2 and 127 DF,  p-value: < 2.2e-16
+
+    plot(MLR_model_v8, 1)
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-21-1.png)
+
+    plot(MLR_model_v8, 2)
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-21-2.png)
+
+    #Observations 9, 22, and 116 appear potentially influential.
+
+    Jackknife_residuals_8<-rstudent(MLR_model_v8)
+
+    Crystal_Lake_temperature_data_8$jackknife_resid <- NA
+    used_rows <- as.numeric(rownames(model.frame(MLR_model_v8)))
+    Crystal_Lake_temperature_data_8$jackknife_resid[used_rows] <- Jackknife_residuals_8
+
+    n8=nrow(Crystal_Lake_temperature_data_8)
+    k8=3
+    p_value_9<-2*pt(abs(Crystal_Lake_temperature_data_8$jackknife_resid[9]), df=n8-k8-1, lower.tail=FALSE)
+    p_value_22<-2*pt(abs(Crystal_Lake_temperature_data_8$jackknife_resid[22]), df=n8-k8-1, lower.tail=FALSE)
+    p_value_116<-2*pt(abs(Crystal_Lake_temperature_data_8$jackknife_resid[116]), df=n8-k8-1, lower.tail=FALSE)
+
+    p_value_9
+
+    ## [1] 0.0004729189
+
+    p_value_22
+
+    ## [1] 5.893695e-05
+
+    p_value_116
+
+    ## [1] 0.000660995
+
+    Crystal_Lake_temperature_data_8$jackknife_resid[9]
+
+    ## [1] -3.545649
+
+    Crystal_Lake_temperature_data_8$jackknife_resid[22]
+
+    ## [1] 4.091781
+
+    Crystal_Lake_temperature_data_8$jackknife_resid[116]
+
+    ## [1] 3.451654
+
+    Crystal_Lake_temperature_data_9<-Crystal_Lake_temperature_data_8[-22, ]
+    MLR_model_v9<-lm(MWC_daily_change~Max_Temp_F+Avg_precip, data=Crystal_Lake_temperature_data_9)
+    summary(MLR_model_v9)
+
+    ## 
+    ## Call:
+    ## lm(formula = MWC_daily_change ~ Max_Temp_F + Avg_precip, data = Crystal_Lake_temperature_data_9)
+    ## 
+    ## Residuals:
+    ##        Min         1Q     Median         3Q        Max 
+    ## -0.0123268 -0.0012593  0.0001839  0.0015968  0.0127198 
+    ## 
+    ## Coefficients:
+    ##               Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) -2.751e-04  1.276e-03  -0.216   0.8296    
+    ## Max_Temp_F  -3.927e-05  1.785e-05  -2.200   0.0297 *  
+    ## Avg_precip   1.726e-02  1.055e-03  16.360   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.003604 on 126 degrees of freedom
+    ##   (108 observations deleted due to missingness)
+    ## Multiple R-squared:  0.6799, Adjusted R-squared:  0.6748 
+    ## F-statistic: 133.8 on 2 and 126 DF,  p-value: < 2.2e-16
+
+    plot(MLR_model_v9, 1)
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-22-1.png)
+
+    plot(MLR_model_v9, 2)
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-22-2.png)
+
+    Jackknife_residuals_9<-rstudent(MLR_model_v9)
+
+    Crystal_Lake_temperature_data_9$jackknife_resid <- NA
+    used_rows <- as.numeric(rownames(model.frame(MLR_model_v9)))
+    Crystal_Lake_temperature_data_9$jackknife_resid[used_rows] <- Jackknife_residuals_9
+
+    n9=nrow(Crystal_Lake_temperature_data_9)
+    k9=3
+    p_value_9<-2*pt(abs(Crystal_Lake_temperature_data_9$jackknife_resid[9]), df=n9-k9-1, lower.tail=FALSE)
+    p_value_115<-2*pt(abs(Crystal_Lake_temperature_data_9$jackknife_resid[115]), df=n9-k9-1, lower.tail=FALSE)
+    p_value_117<-2*pt(abs(Crystal_Lake_temperature_data_9$jackknife_resid[117]), df=n9-k9-1, lower.tail=FALSE)
+
+    p_value_9
+
+    ## [1] 0.0002901043
+
+    p_value_115
+
+    ## [1] 0.0002498983
+
+    p_value_117
+
+    ## [1] 0.004624448
+
+    Crystal_Lake_temperature_data_9$jackknife_resid[9]
+
+    ## [1] -3.679691
+
+    Crystal_Lake_temperature_data_9$jackknife_resid[115]
+
+    ## [1] 3.719794
+
+    Crystal_Lake_temperature_data_9$jackknife_resid[117]
+
+    ## [1] -2.859752
+
+    Crystal_Lake_temperature_data_10<-Crystal_Lake_temperature_data_9[-115, ]
+    MLR_model_v10<-lm(MWC_daily_change~Max_Temp_F+Avg_precip, data=Crystal_Lake_temperature_data_10)
+    summary(MLR_model_v10)
+
+    ## 
+    ## Call:
+    ## lm(formula = MWC_daily_change ~ Max_Temp_F + Avg_precip, data = Crystal_Lake_temperature_data_10)
+    ## 
+    ## Residuals:
+    ##        Min         1Q     Median         3Q        Max 
+    ## -0.0122305 -0.0011594  0.0002622  0.0015736  0.0095396 
+    ## 
+    ## Coefficients:
+    ##               Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) -3.673e-04  1.216e-03  -0.302   0.7630    
+    ## Max_Temp_F  -3.941e-05  1.701e-05  -2.318   0.0221 *  
+    ## Avg_precip   1.729e-02  1.005e-03  17.203   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.003433 on 125 degrees of freedom
+    ##   (108 observations deleted due to missingness)
+    ## Multiple R-squared:  0.7031, Adjusted R-squared:  0.6983 
+    ## F-statistic:   148 on 2 and 125 DF,  p-value: < 2.2e-16
+
+    plot(MLR_model_v10, 1)
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-23-1.png)
+
+    plot(MLR_model_v10, 2)
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-23-2.png)
+
+    Jackknife_residuals_10<-rstudent(MLR_model_v10)
+
+    Crystal_Lake_temperature_data_10$jackknife_resid <- NA
+    used_rows <- as.numeric(rownames(model.frame(MLR_model_v10)))
+    Crystal_Lake_temperature_data_10$jackknife_resid[used_rows] <- Jackknife_residuals_10
+
+    n10=nrow(Crystal_Lake_temperature_data_10)
+    k10=3
+    p_value_9<-2*pt(abs(Crystal_Lake_temperature_data_10$jackknife_resid[9]), df=n10-k10-1, lower.tail=FALSE)
+    p_value_115<-2*pt(abs(Crystal_Lake_temperature_data_10$jackknife_resid[115]), df=n10-k10-1, lower.tail=FALSE)
+    p_value_116<-2*pt(abs(Crystal_Lake_temperature_data_10$jackknife_resid[116]), df=n10-k10-1, lower.tail=FALSE)
+
+    p_value_9
+
+    ## [1] 0.0001516602
+
+    p_value_115
+
+    ## [1] 0.00363717
+
+    p_value_116
+
+    ## [1] 0.003197898
+
+    Crystal_Lake_temperature_data_10$jackknife_resid[9]
+
+    ## [1] -3.85194
+
+    Crystal_Lake_temperature_data_10$jackknife_resid[115]
+
+    ## [1] -2.937942
+
+    Crystal_Lake_temperature_data_10$jackknife_resid[116]
+
+    ## [1] -2.97913
+
+    Crystal_Lake_temperature_data_11<-Crystal_Lake_temperature_data_10[-9, ]
+    MLR_model_v11<-lm(MWC_daily_change~Max_Temp_F+Avg_precip, data=Crystal_Lake_temperature_data_11)
+    summary(MLR_model_v11)
+
+    ## 
+    ## Call:
+    ## lm(formula = MWC_daily_change ~ Max_Temp_F + Avg_precip, data = Crystal_Lake_temperature_data_11)
+    ## 
+    ## Residuals:
+    ##        Min         1Q     Median         3Q        Max 
+    ## -0.0098303 -0.0011980  0.0000562  0.0017129  0.0093567 
+    ## 
+    ## Coefficients:
+    ##               Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)  6.367e-04  1.183e-03   0.538  0.59123    
+    ## Max_Temp_F  -5.235e-05  1.648e-05  -3.176  0.00188 ** 
+    ## Avg_precip   1.728e-02  9.537e-04  18.120  < 2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.003257 on 124 degrees of freedom
+    ##   (108 observations deleted due to missingness)
+    ## Multiple R-squared:  0.7263, Adjusted R-squared:  0.7219 
+    ## F-statistic: 164.6 on 2 and 124 DF,  p-value: < 2.2e-16
+
+    plot(MLR_model_v11, 1)
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-24-1.png)
+
+    plot(MLR_model_v11, 2)
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-24-2.png)
+
+    Jackknife_residuals_11<-rstudent(MLR_model_v11)
+
+    Crystal_Lake_temperature_data_11$jackknife_resid <- NA
+    used_rows <- as.numeric(rownames(model.frame(MLR_model_v11)))
+    Crystal_Lake_temperature_data_11$jackknife_resid[used_rows] <- Jackknife_residuals_11
+
+    n11=nrow(Crystal_Lake_temperature_data_11)
+    k11=3
+    p_value_114<-2*pt(abs(Crystal_Lake_temperature_data_11$jackknife_resid[114]), df=n11-k11-1, lower.tail=FALSE)
+    p_value_115<-2*pt(abs(Crystal_Lake_temperature_data_11$jackknife_resid[115]), df=n11-k11-1, lower.tail=FALSE)
+    p_value_180<-2*pt(abs(Crystal_Lake_temperature_data_11$jackknife_resid[180]), df=n11-k11-1, lower.tail=FALSE)
+
+    p_value_114
+
+    ## [1] 0.002124393
+
+    p_value_115
+
+    ## [1] 0.001895162
+
+    p_value_180
+
+    ## [1] 0.002921629
+
+    Crystal_Lake_temperature_data_11$jackknife_resid[114]
+
+    ## [1] -3.107339
+
+    Crystal_Lake_temperature_data_11$jackknife_resid[115]
+
+    ## [1] -3.142365
+
+    Crystal_Lake_temperature_data_11$jackknife_resid[180]
+
+    ## [1] -3.007922
+
+After removing 10 influential observation, I have reached the point
+where only 1 influential observation remains: observation 115. I will
+regenerate the model for the eleventh time, removing observation 115.
+
+    Crystal_Lake_temperature_data_12<-Crystal_Lake_temperature_data_11[-115, ]
+    MLR_model_v12<-lm(MWC_daily_change~Max_Temp_F+Avg_precip, data=Crystal_Lake_temperature_data_12)
+    summary(MLR_model_v12)
+
+    ## 
+    ## Call:
+    ## lm(formula = MWC_daily_change ~ Max_Temp_F + Avg_precip, data = Crystal_Lake_temperature_data_12)
+    ## 
+    ## Residuals:
+    ##        Min         1Q     Median         3Q        Max 
+    ## -0.0098442 -0.0012407  0.0000162  0.0016144  0.0092460 
+    ## 
+    ## Coefficients:
+    ##               Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)  5.352e-04  1.143e-03   0.468  0.64037    
+    ## Max_Temp_F  -4.964e-05  1.595e-05  -3.113  0.00231 ** 
+    ## Avg_precip   1.718e-02  9.219e-04  18.631  < 2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.003147 on 123 degrees of freedom
+    ##   (108 observations deleted due to missingness)
+    ## Multiple R-squared:  0.7386, Adjusted R-squared:  0.7344 
+    ## F-statistic: 173.8 on 2 and 123 DF,  p-value: < 2.2e-16
+
+    plot(MLR_model_v12, 1)
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-25-1.png)
+
+    plot(MLR_model_v12, 2)
+
+![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-25-2.png)
+
+    Jackknife_residuals_12<-rstudent(MLR_model_v12)
+
+    Crystal_Lake_temperature_data_12$jackknife_resid <- NA
+    used_rows <- as.numeric(rownames(model.frame(MLR_model_v12)))
+    Crystal_Lake_temperature_data_12$jackknife_resid[used_rows] <- Jackknife_residuals_12
+
+    n12=nrow(Crystal_Lake_temperature_data_12)
+    k12=3
+    p_value_100<-2*pt(abs(Crystal_Lake_temperature_data_12$jackknife_resid[100]), df=n12-k12-1, lower.tail=FALSE)
+    p_value_114<-2*pt(abs(Crystal_Lake_temperature_data_12$jackknife_resid[114]), df=n12-k12-1, lower.tail=FALSE)
+    p_value_179<-2*pt(abs(Crystal_Lake_temperature_data_12$jackknife_resid[179]), df=n12-k12-1, lower.tail=FALSE)
+
+    p_value_100
+
+    ## [1] 0.002181643
+
+    p_value_114
+
+    ## [1] 0.001253988
+
+    p_value_179
+
+    ## [1] 0.001867439
+
+    Crystal_Lake_temperature_data_12$jackknife_resid[100]
+
+    ## [1] 3.09929
+
+    Crystal_Lake_temperature_data_12$jackknife_resid[114]
+
+    ## [1] -3.266773
+
+    Crystal_Lake_temperature_data_12$jackknife_resid[179]
+
+    ## [1] -3.147023
+
+We are back to three influential observations; however, for the sake of
+space, I will stop the Jackknifing process here and use MLR\_model\_v12
+for inference and predictions.
