@@ -322,7 +322,7 @@ plot(new_MLR_model, 2)
 
 
 ```
-Removing the single influential observation did not singificantly improve the residual normality. Nevertheless, I will continue testing and removing influential observations one at a time until none remain.
+Removing the single influential observation did not significantly improve the residual normality. Nevertheless, I will continue testing and removing influential observations one at a time until none remain.
 
 ```{r}
 
@@ -383,4 +383,288 @@ Crystal_Lake_temperature_data_3$jackknife_resid[76]
 
 
 ```
-Observation 76 from the dataset with two influential observations removed has the highest abolsute residual value, so I will remove it and regenerate the model for the third time.
+Observation 76 from the dataset with two influential observations removed has the highest absolute residual value, so I will remove it and regenerate the model for the third time.
+
+```{r}
+
+Crystal_Lake_temperature_data_4<-Crystal_Lake_temperature_data_3[-76, ]
+MLR_model_v4<-lm(MWC_daily_change~Max_Temp_F+Avg_precip, data=Crystal_Lake_temperature_data_4)
+summary(MLR_model_v4)
+plot(MLR_model_v4, 1)
+plot(MLR_model_v4, 2)
+
+#Observations 10, 193, and 24 appear potentially influential.
+
+Jackknife_residuals_4<-rstudent(MLR_model_v4)
+
+Crystal_Lake_temperature_data_4$jackknife_resid <- NA
+used_rows <- as.numeric(rownames(model.frame(MLR_model_v4)))
+Crystal_Lake_temperature_data_4$jackknife_resid[used_rows] <- Jackknife_residuals_4
+
+n4=nrow(Crystal_Lake_temperature_data_4)
+k4=3
+p_value_10_new<-2*pt(abs(Crystal_Lake_temperature_data_4$jackknife_resid[10]), df=n4-k4-1, lower.tail=FALSE)
+p_value_193<-2*pt(abs(Crystal_Lake_temperature_data_4$jackknife_resid[193]), df=n4-k4-1, lower.tail=FALSE)
+p_value_24_new<-2*pt(abs(Crystal_Lake_temperature_data_4$jackknife_resid[24]), df=n4-k4-1, lower.tail=FALSE)
+
+p_value_10_new
+p_value_193
+p_value_24_new
+
+Crystal_Lake_temperature_data_4$jackknife_resid[10]
+Crystal_Lake_temperature_data_4$jackknife_resid[193]
+Crystal_Lake_temperature_data_4$jackknife_resid[24]
+
+```
+All three observations are significantly influential, with observation 10 having the highest abolsute residual value. Thus, I will remove the 10th observation and regenerate the model a 4th time.
+
+```{r}
+
+Crystal_Lake_temperature_data_5<-Crystal_Lake_temperature_data_4[-10, ]
+MLR_model_v5<-lm(MWC_daily_change~Max_Temp_F+Avg_precip, data=Crystal_Lake_temperature_data_5)
+summary(MLR_model_v5)
+plot(MLR_model_v5, 1)
+plot(MLR_model_v5, 2)
+
+#Observations 10, 192, and 23 appear potentially influential.
+
+Jackknife_residuals_5<-rstudent(MLR_model_v5)
+
+Crystal_Lake_temperature_data_5$jackknife_resid <- NA
+used_rows <- as.numeric(rownames(model.frame(MLR_model_v5)))
+Crystal_Lake_temperature_data_5$jackknife_resid[used_rows] <- Jackknife_residuals_5
+
+n5=nrow(Crystal_Lake_temperature_data_5)
+k5=3
+p_value_10_new<-2*pt(abs(Crystal_Lake_temperature_data_5$jackknife_resid[10]), df=n5-k5-1, lower.tail=FALSE)
+p_value_192<-2*pt(abs(Crystal_Lake_temperature_data_5$jackknife_resid[192]), df=n5-k5-1, lower.tail=FALSE)
+p_value_23<-2*pt(abs(Crystal_Lake_temperature_data_5$jackknife_resid[23]), df=n5-k5-1, lower.tail=FALSE)
+
+p_value_10_new
+p_value_192
+p_value_23
+
+Crystal_Lake_temperature_data_5$jackknife_resid[10]
+Crystal_Lake_temperature_data_5$jackknife_resid[192]
+Crystal_Lake_temperature_data_5$jackknife_resid[24]
+
+```
+All 3 points are statistically influential, with observation 192 having the highest absolute residual value. I will regenerate the model a fifth time with observation 192 removed.
+
+```{r}
+Crystal_Lake_temperature_data_6<-Crystal_Lake_temperature_data_5[-192, ]
+MLR_model_v6<-lm(MWC_daily_change~Max_Temp_F+Avg_precip, data=Crystal_Lake_temperature_data_6)
+summary(MLR_model_v6)
+plot(MLR_model_v6, 1)
+plot(MLR_model_v6, 2)
+
+#Observations 10, 23, and 24 appear potentially influential.
+
+Jackknife_residuals_6<-rstudent(MLR_model_v6)
+
+Crystal_Lake_temperature_data_6$jackknife_resid <- NA
+used_rows <- as.numeric(rownames(model.frame(MLR_model_v6)))
+Crystal_Lake_temperature_data_6$jackknife_resid[used_rows] <- Jackknife_residuals_6
+
+n6=nrow(Crystal_Lake_temperature_data_6)
+k6=3
+p_value_10_new<-2*pt(abs(Crystal_Lake_temperature_data_6$jackknife_resid[10]), df=n6-k6-1, lower.tail=FALSE)
+p_value_23<-2*pt(abs(Crystal_Lake_temperature_data_6$jackknife_resid[192]), df=n6-k6-1, lower.tail=FALSE)
+p_value_24_new<-2*pt(abs(Crystal_Lake_temperature_data_6$jackknife_resid[23]), df=n6-k6-1, lower.tail=FALSE)
+
+p_value_10_new
+p_value_23
+p_value_24_new
+
+Crystal_Lake_temperature_data_6$jackknife_resid[10]
+Crystal_Lake_temperature_data_6$jackknife_resid[23]
+Crystal_Lake_temperature_data_6$jackknife_resid[24]
+
+
+```
+The 23rd observation is not statistically influential at alpha=0.01. Observations 10 and 24 are influential, and of these two data, observation 10 has the hgiher absolute residual value. Thus, I regenerate the model a sixth time, removing observation 10.
+
+```{r}
+
+Crystal_Lake_temperature_data_7<-Crystal_Lake_temperature_data_6[-10, ]
+MLR_model_v7<-lm(MWC_daily_change~Max_Temp_F+Avg_precip, data=Crystal_Lake_temperature_data_7)
+summary(MLR_model_v7)
+plot(MLR_model_v7, 1)
+plot(MLR_model_v7, 2)
+
+#Observations 9, 22, and 23 appear potentially influential.
+
+Jackknife_residuals_7<-rstudent(MLR_model_v7)
+
+Crystal_Lake_temperature_data_7$jackknife_resid <- NA
+used_rows <- as.numeric(rownames(model.frame(MLR_model_v7)))
+Crystal_Lake_temperature_data_7$jackknife_resid[used_rows] <- Jackknife_residuals_7
+
+n7=nrow(Crystal_Lake_temperature_data_7)
+k7=3
+p_value_9<-2*pt(abs(Crystal_Lake_temperature_data_7$jackknife_resid[9]), df=n7-k7-1, lower.tail=FALSE)
+p_value_22<-2*pt(abs(Crystal_Lake_temperature_data_7$jackknife_resid[22]), df=n7-k7-1, lower.tail=FALSE)
+p_value_23<-2*pt(abs(Crystal_Lake_temperature_data_7$jackknife_resid[23]), df=n7-k7-1, lower.tail=FALSE)
+
+p_value_9
+p_value_22
+p_value_23
+
+Crystal_Lake_temperature_data_7$jackknife_resid[9]
+Crystal_Lake_temperature_data_7$jackknife_resid[22]
+Crystal_Lake_temperature_data_7$jackknife_resid[23]
+
+```
+All 3 points are influential, with observation 22 having the highest abolsute residual value. I will regenerate the model a seventh time, removing observation 22.
+
+```{r}
+
+Crystal_Lake_temperature_data_8<-Crystal_Lake_temperature_data_7[-22, ]
+MLR_model_v8<-lm(MWC_daily_change~Max_Temp_F+Avg_precip, data=Crystal_Lake_temperature_data_8)
+summary(MLR_model_v8)
+plot(MLR_model_v8, 1)
+plot(MLR_model_v8, 2)
+
+#Observations 9, 22, and 116 appear potentially influential.
+
+Jackknife_residuals_8<-rstudent(MLR_model_v8)
+
+Crystal_Lake_temperature_data_8$jackknife_resid <- NA
+used_rows <- as.numeric(rownames(model.frame(MLR_model_v8)))
+Crystal_Lake_temperature_data_8$jackknife_resid[used_rows] <- Jackknife_residuals_8
+
+n8=nrow(Crystal_Lake_temperature_data_8)
+k8=3
+p_value_9<-2*pt(abs(Crystal_Lake_temperature_data_8$jackknife_resid[9]), df=n8-k8-1, lower.tail=FALSE)
+p_value_22<-2*pt(abs(Crystal_Lake_temperature_data_8$jackknife_resid[22]), df=n8-k8-1, lower.tail=FALSE)
+p_value_116<-2*pt(abs(Crystal_Lake_temperature_data_8$jackknife_resid[116]), df=n8-k8-1, lower.tail=FALSE)
+
+p_value_9
+p_value_22
+p_value_116
+
+Crystal_Lake_temperature_data_8$jackknife_resid[9]
+Crystal_Lake_temperature_data_8$jackknife_resid[22]
+Crystal_Lake_temperature_data_8$jackknife_resid[116]
+
+```
+```{r}
+Crystal_Lake_temperature_data_9<-Crystal_Lake_temperature_data_8[-22, ]
+MLR_model_v9<-lm(MWC_daily_change~Max_Temp_F+Avg_precip, data=Crystal_Lake_temperature_data_9)
+summary(MLR_model_v9)
+plot(MLR_model_v9, 1)
+plot(MLR_model_v9, 2)
+
+Jackknife_residuals_9<-rstudent(MLR_model_v9)
+
+Crystal_Lake_temperature_data_9$jackknife_resid <- NA
+used_rows <- as.numeric(rownames(model.frame(MLR_model_v9)))
+Crystal_Lake_temperature_data_9$jackknife_resid[used_rows] <- Jackknife_residuals_9
+
+n9=nrow(Crystal_Lake_temperature_data_9)
+k9=3
+p_value_9<-2*pt(abs(Crystal_Lake_temperature_data_9$jackknife_resid[9]), df=n9-k9-1, lower.tail=FALSE)
+p_value_115<-2*pt(abs(Crystal_Lake_temperature_data_9$jackknife_resid[115]), df=n9-k9-1, lower.tail=FALSE)
+p_value_117<-2*pt(abs(Crystal_Lake_temperature_data_9$jackknife_resid[117]), df=n9-k9-1, lower.tail=FALSE)
+
+p_value_9
+p_value_115
+p_value_117
+
+Crystal_Lake_temperature_data_9$jackknife_resid[9]
+Crystal_Lake_temperature_data_9$jackknife_resid[115]
+Crystal_Lake_temperature_data_9$jackknife_resid[117]
+
+```
+```{r}
+
+Crystal_Lake_temperature_data_10<-Crystal_Lake_temperature_data_9[-115, ]
+MLR_model_v10<-lm(MWC_daily_change~Max_Temp_F+Avg_precip, data=Crystal_Lake_temperature_data_10)
+summary(MLR_model_v10)
+plot(MLR_model_v10, 1)
+plot(MLR_model_v10, 2)
+
+Jackknife_residuals_10<-rstudent(MLR_model_v10)
+
+Crystal_Lake_temperature_data_10$jackknife_resid <- NA
+used_rows <- as.numeric(rownames(model.frame(MLR_model_v10)))
+Crystal_Lake_temperature_data_10$jackknife_resid[used_rows] <- Jackknife_residuals_10
+
+n10=nrow(Crystal_Lake_temperature_data_10)
+k10=3
+p_value_9<-2*pt(abs(Crystal_Lake_temperature_data_10$jackknife_resid[9]), df=n10-k10-1, lower.tail=FALSE)
+p_value_115<-2*pt(abs(Crystal_Lake_temperature_data_10$jackknife_resid[115]), df=n10-k10-1, lower.tail=FALSE)
+p_value_116<-2*pt(abs(Crystal_Lake_temperature_data_10$jackknife_resid[116]), df=n10-k10-1, lower.tail=FALSE)
+
+p_value_9
+p_value_115
+p_value_116
+
+Crystal_Lake_temperature_data_10$jackknife_resid[9]
+Crystal_Lake_temperature_data_10$jackknife_resid[115]
+Crystal_Lake_temperature_data_10$jackknife_resid[116]
+
+```
+```{r}
+
+Crystal_Lake_temperature_data_11<-Crystal_Lake_temperature_data_10[-9, ]
+MLR_model_v11<-lm(MWC_daily_change~Max_Temp_F+Avg_precip, data=Crystal_Lake_temperature_data_11)
+summary(MLR_model_v11)
+plot(MLR_model_v11, 1)
+plot(MLR_model_v11, 2)
+
+Jackknife_residuals_11<-rstudent(MLR_model_v11)
+
+Crystal_Lake_temperature_data_11$jackknife_resid <- NA
+used_rows <- as.numeric(rownames(model.frame(MLR_model_v11)))
+Crystal_Lake_temperature_data_11$jackknife_resid[used_rows] <- Jackknife_residuals_11
+
+n11=nrow(Crystal_Lake_temperature_data_11)
+k11=3
+p_value_114<-2*pt(abs(Crystal_Lake_temperature_data_11$jackknife_resid[114]), df=n11-k11-1, lower.tail=FALSE)
+p_value_115<-2*pt(abs(Crystal_Lake_temperature_data_11$jackknife_resid[115]), df=n11-k11-1, lower.tail=FALSE)
+p_value_180<-2*pt(abs(Crystal_Lake_temperature_data_11$jackknife_resid[180]), df=n11-k11-1, lower.tail=FALSE)
+
+p_value_114
+p_value_115
+p_value_180
+
+Crystal_Lake_temperature_data_11$jackknife_resid[114]
+Crystal_Lake_temperature_data_11$jackknife_resid[115]
+Crystal_Lake_temperature_data_11$jackknife_resid[180]
+
+```
+After removing 10 influential observation, I have reached the point where only 1 influential observation remains: observation 115. I will regenerate the model for the eleventh time, removing observation 115.
+
+```{r}
+
+Crystal_Lake_temperature_data_12<-Crystal_Lake_temperature_data_11[-115, ]
+MLR_model_v12<-lm(MWC_daily_change~Max_Temp_F+Avg_precip, data=Crystal_Lake_temperature_data_12)
+summary(MLR_model_v12)
+plot(MLR_model_v12, 1)
+plot(MLR_model_v12, 2)
+
+Jackknife_residuals_12<-rstudent(MLR_model_v12)
+
+Crystal_Lake_temperature_data_12$jackknife_resid <- NA
+used_rows <- as.numeric(rownames(model.frame(MLR_model_v12)))
+Crystal_Lake_temperature_data_12$jackknife_resid[used_rows] <- Jackknife_residuals_12
+
+n12=nrow(Crystal_Lake_temperature_data_12)
+k12=3
+p_value_100<-2*pt(abs(Crystal_Lake_temperature_data_12$jackknife_resid[100]), df=n12-k12-1, lower.tail=FALSE)
+p_value_114<-2*pt(abs(Crystal_Lake_temperature_data_12$jackknife_resid[114]), df=n12-k12-1, lower.tail=FALSE)
+p_value_179<-2*pt(abs(Crystal_Lake_temperature_data_12$jackknife_resid[179]), df=n12-k12-1, lower.tail=FALSE)
+
+p_value_100
+p_value_114
+p_value_179
+
+Crystal_Lake_temperature_data_12$jackknife_resid[100]
+Crystal_Lake_temperature_data_12$jackknife_resid[114]
+Crystal_Lake_temperature_data_12$jackknife_resid[179]
+
+```
+We are back to three influential observations; however, for the sake of space, I will stop the Jackknifing process here and use MLR_model_v12 for inference and predictions.
+
+
