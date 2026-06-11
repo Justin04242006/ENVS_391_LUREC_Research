@@ -84,10 +84,12 @@ systems can be further improved and made more efficient.
 
 ## Contents of this repository:
 
-# This README file
+* This README file
 
-# A Markdown file containing the code used to wrangle, analyze, visualize, and model preliminary data from the LUREC field site
+* A Markdown file containing the code used to wrangle, analyze, visualize, and model preliminary data from the LUREC field site
 
-# A pptx file of the poster I presented at the 2026 Undergraduate Research and Engagement Symposium at Loyola University Chicago, which visually showcases the work in the Markdown file and outlines future research goals.
+* A pptx file of the poster I presented at the 2026 Undergraduate Research and Engagement Symposium at Loyola University Chicago, which visually showcases the work in the Markdown file and outlines future research goals.
+
+New repo access token:
 
 github\_pat\_11BRSRMWI0WcZ8a5QAvWbH\_ODGDtfnO0P33UTmVVbkUyrXIo8JsBnqeS6yOet8G238WEEDZSRZX2sCf8IR

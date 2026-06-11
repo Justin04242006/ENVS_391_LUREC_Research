@@ -2,7 +2,7 @@
 title: "README.md"
 author: "Justin Peabody"
 date: "2026-04-30"
-output: html_document
+output: md_document
 ---
 
 # This repository covers work done during the Spring 2026 semester (January-April 2026). 
@@ -45,7 +45,16 @@ The permeable tile represents eixsting permeable pavement on many campus walkway
 
 It is important to note that the permeable pavement currently on Loyola's campus is only permeable due to the gaps in the pavement. 
 The material itself is not very permeable. 
-Therefore, analysis of water infiltration through permeable tile on the LUREC campus will allow us evaluate whether the actually permeable tile would absorb more rainwater than Loyola's existing permeable pavers, by  extrapolating the area of a single pot to the approximate combined area of Loyola's campus walkways.
+Therefore, analysis of water infiltration through permeable tile on the LUREC campus will allow us evaluate whether the actually permeable tile would absorb more rainwater than Loyola's existing permeable pavers, by extrapolating the area of a single pot to the approximate combined area of Loyola's campus walkways.
 The ultimate goal of this multi-year project is to provide recommendations to the university on how current stormwater managment systems can be further improved and made more efficient. 
 
 
+## Contents of this repository:
+
+# This README file
+
+# A Markdown file containing the code used to wrangle, analyze, visualize, and model preliminary data from the LUREC field site
+
+# A pptx file of the poster I presented at the 2026 Undergraduate Research and Engagement Symposium at Loyola University Chicago, which visually showcases the work in the Markdown file and outlines future research goals.
+
+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
