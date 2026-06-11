@@ -5,9 +5,18 @@
 Welcome to the repository hosting code for the project of my Independent
 Environmental Research class! This project expands upon the work of a
 former undergraduate student, who installed a field site on the Loyola
-University Retreat and Ecology Campus in Woodstock, IL in collaboration
+University Retreat and Ecology Campus (LUREC) in Woodstock, IL in collaboration
 with the Environmental Science professor who was my professor for the
 research class.
+
+## Contents of this repository
+
+* README.md: This README file
+
+* LUREC_project_code.md: A Markdown file containing the code used to wrangle, analyze, visualize, and model preliminary data from the LUREC field site
+
+* 2026_URES_poster: A Powerpoint file of the poster I presented at the 2026 Undergraduate Research and Engagement Symposium (URES) at Loyola University Chicago, which visually showcases the work in the Markdown file and outlines future research goals.git
+
 
 ## Project background information
 
@@ -82,13 +91,6 @@ The ultimate goal of this multi-year project is to provide
 recommendations to the university on how current stormwater managment
 systems can be further improved and made more efficient.
 
-## Contents of this repository
-
-* README.md: This README file
-
-* LUREC_project_code.md: A Markdown file containing the code used to wrangle, analyze, visualize, and model preliminary data from the LUREC field site
-
-* 2026_URES_poster: A Powerpoint file of the poster I presented at the 2026 Undergraduate Research and Engagement Symposium (URES) at Loyola University Chicago, which visually showcases the work in the Markdown file and outlines future research goals.
 
 New repo access token:
 
