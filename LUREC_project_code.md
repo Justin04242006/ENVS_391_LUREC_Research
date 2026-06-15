@@ -467,10 +467,18 @@ assumptions, and then added the regression plane to the scatterplot.
     plot(MLR_model, 2)
 
 ![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-11-2.png)
+
 Residuals generally appear scattered around zero. It is difficult to
 gauge if a fan shape is present because the precipitation data is very
 positively skewed. As I discuss later, this is one of the model’s
 primary limitations.
+
+There is a moderate violation of residual normality, with the normal
+qqplot appearing linear between -1 and 1 standard deviations of the mean
+of MWC\_daily\_change but exhibiting heavy tails on both ends. This
+might be alleviated by investigating the three potentially influential
+observations (observations 11, 77, and 121) using Jackknife residuals,
+testing if each observation is actually influential at alpha=0.01.
 
     x_seq<-seq(min(Crystal_Lake_temperature_data$Max_Temp_F, na.rm=TRUE), max(Crystal_Lake_temperature_data$Max_Temp_F, na.rm=TRUE), length.out=30)
     y_seq<-seq(min(Crystal_Lake_temperature_data$Avg_precip, na.rm=TRUE), max(Crystal_Lake_temperature_data$Avg_precip, na.rm=TRUE), length.out=30)
@@ -494,13 +502,6 @@ primary limitations.
     ## Warning: Ignoring 108 observations
 
 ![](LUREC_project_code_files/figure-markdown_strict/unnamed-chunk-12-1.png)
-
-There is a moderate violation of residual normality, with the normal
-qqplot appearing linear between -1 and 1 standard deviations of the mean
-of MWC\_daily\_change but exhibiting heavy tails on both ends. This
-might be alleviated by investigating the three potentially influential
-observations (observations 11, 77, and 121) using Jackknife residuals,
-testing if each observation is actually influential at alpha=0.01.
 
     MWC_model_Jackknife_residuals<-rstudent(MLR_model)
     Crystal_Lake_temperature_data$jackknife_resid <- NA
@@ -603,7 +604,7 @@ and removing influential observations one at a time until none remain.
 
     ## [1] 2.226054e-05
 
-    #All 3 potnetially influential observations are statistically influential
+    #All 3 potentially influential observations are statistically influential
 
     Crystal_Lake_temperature_data_2$jackknife_resid[11]
 
@@ -917,7 +918,7 @@ time with observation 192 removed.
 
 The 23rd observation is not statistically influential at alpha=0.01.
 Observations 10 and 24 are influential, and of these two data,
-observation 10 has the hgiher absolute residual value. Thus, I
+observation 10 has the higher absolute residual value. Thus, I
 regenerate the model a sixth time, removing observation 10.
 
     Crystal_Lake_temperature_data_7<-Crystal_Lake_temperature_data_6[-10, ]
@@ -1349,3 +1350,157 @@ regenerate the model for the eleventh time, removing observation 115.
 We are back to three influential observations; however, for the sake of
 space, I will stop the Jackknifing process here and use MLR\_model\_v12
 for inference and predictions.
+
+    summary(MLR_model_v12)
+
+    ## 
+    ## Call:
+    ## lm(formula = MWC_daily_change ~ Max_Temp_F + Avg_precip, data = Crystal_Lake_temperature_data_12)
+    ## 
+    ## Residuals:
+    ##        Min         1Q     Median         3Q        Max 
+    ## -0.0098442 -0.0012407  0.0000162  0.0016144  0.0092460 
+    ## 
+    ## Coefficients:
+    ##               Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)  5.352e-04  1.143e-03   0.468  0.64037    
+    ## Max_Temp_F  -4.964e-05  1.595e-05  -3.113  0.00231 ** 
+    ## Avg_precip   1.718e-02  9.219e-04  18.631  < 2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.003147 on 123 degrees of freedom
+    ##   (108 observations deleted due to missingness)
+    ## Multiple R-squared:  0.7386, Adjusted R-squared:  0.7344 
+    ## F-statistic: 173.8 on 2 and 123 DF,  p-value: < 2.2e-16
+
+Interpretation of model:
+
+- 73.86% of the sample variation in MWC\_daily\_change is explained
+  through linear relationships with Max\_Temp\_F and Avg\_precip.
+
+- Based on the sample, we expect MWC\_daily\_change to decrease by
+  4.964\*10^-5 m^3 water/m^3 soil per 1 degree Fahrenheit increase in
+  Max\_Temp\_F, holding Avg\_precip constant. This physically makes
+  sense since higher daily temperature yields higher evaporation rates,
+  thereby yielding more dramatic decreases in soil water content.
+
+- We expect MWC\_daily\_change to increase by 0.01718 m^3 water/m^3 soil
+  per 1-inch increase in Avg\_precip, holding Max\_Temp\_F constant.
+  This physically makes sense since precipitation increases soil
+  moisture.
+
+- The model has a significantly better overall fitting performance than
+  the null regression plane at the sample mean of MWC\_daily\_change (as
+  indicated by the small p value of the overall F test).
+
+- Both predictors significantly improve the fitting performance of the
+  model including only the other predictor, as indicated by the small p
+  values of the t tests for those individual predictors (which are
+  statistically equivalent to single partial F tests between the
+  respective reduced models and the full model containing both
+  predictors).
+
+An important point to note with this model:
+
+Before removing any influential observations, the p value for the t test
+statistic associated with the Max\_Temp\_F variable was 0.8372, meaning
+that it did not significantly improve the fitting performance of the
+model already including the Avg\_precip variable. However, after
+removing some influential observations, this t test statistic became
+significant at alpha=0.05, taking on a value of 0.00231. This means
+that, when influential observations are accounted for, Max\_Temp\_F does
+significantly contribute to the model’s fitting performance. When I
+originally created this regression model for my research poster, I did
+not do any Jackknifing as I had not learned it yet in my Regression
+Analysis class. When I did learn about jackknife residuals, I was
+occupied with writing the proposal for future research and did not think
+to remove influential observations from the model. Thus, my poster
+states that Max\_Temp\_F is not significant.
+
+Thankfully, this was a preliminary model created from temperature and
+precipitation data collected from proxy sources. Future research will
+utilize on-site temperature sensors and precipitation gauges to
+eliminate uncertainty associated with spatial variability. It was thus a
+low-stakes opportunity to learn an important lesson that I will carry
+with me for the rest of my career: ALWAYS check for influential
+observations every time I run a regression model. Not only do
+influential observations affect parameter estimates, they can also
+dramatically change the p values of partial significance hypothesis
+tests, affecting a researcher’s decision making.
+
+Moving on to test for multicollinearity:
+
+    VIF(MLR_model_v12)
+
+    ## Max_Temp_F Avg_precip 
+    ##   1.016896   1.016896
+
+Variance inflation factors are very low (close to 1) for both
+predictors, yielding no evidence of multicollinearity. Mathematically,
+this means that the model regressing Max\_Temp\_F on Avg\_precip and the
+model regressing Avg\_precip on Max\_Temp\_F both have very low R
+squared values, since *V**I**F*(*j*) = 1/(1 − *R**j*<sup>2</sup>).
+
+Moving on to inference using the model. Remember that the response
+variable is MWC\_daily\_change, meaning the model predicts the increase
+or decrease in mean water content between the previous day and the
+current day. Let’s choose two random consecutive observations from the
+data and run the model on the more recent observation.
+
+    obs49<-Crystal_Lake_temperature_data_12[49, ]
+    obs50<-Crystal_Lake_temperature_data_12[50, ]
+    MWC_daily_change_actual<-obs50$MWC-obs49$MWC
+    obs49
+
+    ## # A tibble: 1 × 8
+    ##   Date       Max_Temp_F Min_Temp_F   MWC Avg_precip Avg_temp_F MWC_daily_change
+    ##   <date>          <dbl>      <dbl> <dbl>      <dbl>      <dbl>            <dbl>
+    ## 1 2025-03-30         73         42 0.196     0.0633       57.5         -0.00143
+    ## # ℹ 1 more variable: jackknife_resid <dbl>
+
+    obs50
+
+    ## # A tibble: 1 × 8
+    ##   Date       Max_Temp_F Min_Temp_F   MWC Avg_precip Avg_temp_F MWC_daily_change
+    ##   <date>          <dbl>      <dbl> <dbl>      <dbl>      <dbl>            <dbl>
+    ## 1 2025-03-31         73         32 0.197      0.243       52.5          0.00144
+    ## # ℹ 1 more variable: jackknife_resid <dbl>
+
+    MWC_daily_change_actual
+
+    ## [1] 0.001444444
+
+Under Max\_Temp\_F=73 degrees F and Avg\_precip=0.2433333, a change in
+MWC of 0.00144 was observed. Let’s see what the model predicts will
+happen to MWC under these conditions.
+
+    newdata<-data.frame(Max_Temp_F=73, Avg_precip=0.2433333)
+    predict(MLR_model_v12, newdata, interval="prediction", level=0.95)
+
+    ##           fit          lwr        upr
+    ## 1 0.001091453 -0.005167444 0.00735035
+
+The model predicts a 1-day change in MWC of about 0.00109 m^3 water/m^3
+of soil for a single day with these atmospheric conditions, which is
+similar to the actual observed value.
+
+After soil cover materials and onsite temperature sensors and
+precipitation gauges are installed, the future regression model will
+include the following variables:
+
+- WC\_daily\_change (continuous): the response variable, measuring how
+  much the average daily water content for a given pot has changed
+  between the previous day and the current day
+
+- pot\_no (categorical): the number of the pot (1-12) as previously
+  labeled
+
+- daily\_precip (continuous): the raw onsite measurement of daily
+  precipitation as recorded by the precipitation gauge
+
+- daily\_max\_temp\_F (continuous): the onsite measurement of daily
+  maximum temperature as recorded by the temperature sensor
+
+- cover\_material\_type (categorical): the cover material on top of each
+  pot (permeable tile, cement, vegetation, or nothing)
