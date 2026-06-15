@@ -71,6 +71,8 @@
     ## All functions that had a . in the name now have an _
     ## all.correlations -> all_correlations, cor.demo -> cor_demo, etc.
 
+# Data cleaning, exploratory analysis, and visualization
+
 The very first action taken, before the project began, was downloading
 nearby precipitation data from this site:
 <https://www.ncei.noaa.gov/access/past-weather/Woodstock%2C%20Illinois.>
@@ -408,6 +410,8 @@ and increases in mean water content. It appears that, at certain points
 in the months of February and March, mean water content increases
 without precipitation, but this is partially due to missingness in the
 precipitation data during those months.
+
+# Regression modeling
 
 At this point, the relationship between maximum temperature and mean
 water content was uncertain and was investigated as part of the multiple
@@ -1504,3 +1508,6 @@ include the following variables:
 
 - cover\_material\_type (categorical): the cover material on top of each
   pot (permeable tile, cement, vegetation, or nothing)
+
+\#personal access token:
+github\_pat\_11BRSRMWI0vXUDadA4nmg3\_m9bYnS7fyRxwB2sWYmV7U6k3AfdoPax2WaDMjnsWxk7GXYMF7JDZKKMs3TY
